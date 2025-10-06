@@ -114,19 +114,24 @@ public class GameWorld extends Canvas {
             public void handle(long now) {
                 if (now - lastFrameTime >= FRAME_DURATION) {
                     
+                    // Redraw the background
                     drawBackground();
                     
+                    // Draw the skeleton 
                     if (skeletonFrames[currentFrame] != null) {
                         Image currentImage = skeletonFrames[currentFrame];
                         
+                        // Scale factor 
                         double scale = 0.5;  
                         
                         double width = currentImage.getWidth() * scale;
                         double height = currentImage.getHeight() * scale;
                         
+                        // Center position
                         double x = 350 - width / 2;
                         double y = 350 - height / 2;
                         
+                        // Draw with scaled dimensions
                         gc.drawImage(currentImage, x, y, width, height);
                     }
                     
