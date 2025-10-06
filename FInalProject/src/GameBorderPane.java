@@ -13,6 +13,7 @@ public class GameBorderPane extends BorderPane {
 	// I asked Claude where to instantiate an object of the player class because I didn't 
 	// know if I should do it here, or in Main.java. Claude said to do it here.
 	private Player player;
+	private GameWorld gameWorld = new GameWorld();
 	
 	public GameBorderPane() {
 		// Create an instance of Player
@@ -42,12 +43,9 @@ public class GameBorderPane extends BorderPane {
 		leftPane.setSpacing(10);
 		leftPane.setPadding(new Insets(10));
 		
-		
 		// To hold the actual game animation itself
-		Pane centerPane = new Pane();
-		centerPane.setPrefWidth(50);
-		centerPane.setStyle("-fx-border-color: black; -fx-border-width: 0 2 0 0;");
-		setCenter(centerPane);
+		gameWorld.setStyle("-fx-border-color: black; -fx-border-width: 0 2 0 0;");
+		setCenter(gameWorld);
 		
 		// To hold the option to choose a spell, fight or flee
 		VBox rightPane = new VBox();

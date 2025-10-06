@@ -12,7 +12,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		GameBorderPane pane = new GameBorderPane();
-		Scene scene = new Scene(pane, 1000, 700);
+		Scene scene = new Scene(pane);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
