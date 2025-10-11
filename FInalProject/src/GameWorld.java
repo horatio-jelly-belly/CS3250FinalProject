@@ -21,6 +21,7 @@ public class GameWorld extends Canvas {
 	private AnimationTimer animationTimer;
 	private long lastFrameTime = 0;
 	private final long FRAME_DURATION = 50_000_000;
+	private boolean cycle = false;
 	
     public GameWorld() {
         super(700, 700);
@@ -29,10 +30,11 @@ public class GameWorld extends Canvas {
         
         loadSkeletonFrames();
         
-        startAnimation();
+        drawInitialSkeleton();
+        
     }
-    
-    private void drawBackground() {
+
+	private void drawBackground() {
     	GraphicsContext gc = this.getGraphicsContext2D();
         
         // Paint the sky
@@ -106,7 +108,7 @@ public class GameWorld extends Canvas {
     	}
     }
     
-    private void startAnimation() {
+    public void startAnimation() {
         GraphicsContext gc = this.getGraphicsContext2D();
         
         animationTimer = new AnimationTimer() {
@@ -136,6 +138,13 @@ public class GameWorld extends Canvas {
                     }
                     
                     currentFrame = (currentFrame + 1) % skeletonFrames.length;
+
+                    if (currentFrame == 0 && cycle) {
+                        animationTimer.stop();
+                        cycle = false;
+                    } else if (currentFrame == 11) {
+                        cycle = true;
+                    }
                     lastFrameTime = now;
                 }
             }
@@ -143,4 +152,22 @@ public class GameWorld extends Canvas {
         
         animationTimer.start();
     }
+    
+    private void drawInitialSkeleton() {
+    	GraphicsContext gc = this.getGraphicsContext2D();
+    	
+		Image initialImage = skeletonFrames[1];
+		// Scale factor 
+        double scale = 0.5;  
+        
+        double width = initialImage.getWidth() * scale;
+        double height = initialImage.getHeight() * scale;
+        
+        // Center position
+        double x = 350 - width / 2;
+        double y = 350 - height / 2;
+        
+        // Draw with scaled dimensions
+        gc.drawImage(initialImage, x, y, width, height);
+	}
 }

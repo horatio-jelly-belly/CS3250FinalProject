@@ -54,8 +54,16 @@ public class GameBorderPane extends BorderPane {
 		rightPane.setStyle("-fx-border-color: black; -fx-border-width: 0 0 0 2;");
 		rightPane.setAlignment(Pos.BOTTOM_LEFT);
 		
+		// Button to cast spell
+		Button castSpellButton = new Button("Cast Spell!");
+		
 		// Button to attack the enemy
 		Button attackButton = new Button("Attack!");
+		
+		// Start the animation when attackButton is called
+		attackButton.setOnAction(event -> {
+			gameWorld.startAnimation();
+		});
 		
 		// Radio buttons so that player can choose which spell to cast
 		Label chooseSpellLabel = new Label("Choose your spell");
@@ -69,7 +77,7 @@ public class GameBorderPane extends BorderPane {
 		iceRadioButton.setToggleGroup(toggleGroup);
 		
 		// Put nodes in right pane with styling
-		rightPane.getChildren().addAll(chooseSpellLabel, fireRadioButton, iceRadioButton, attackButton);
+		rightPane.getChildren().addAll(chooseSpellLabel, fireRadioButton, iceRadioButton, castSpellButton, attackButton);
 		rightPane.setAlignment(Pos.BOTTOM_CENTER);
 		rightPane.setSpacing(10);
 		rightPane.setPadding(new Insets(10));
