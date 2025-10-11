@@ -16,36 +16,51 @@ import javafx.scene.shape.ArcType;
 // Claude to change the coordinates of the objects in the canvas and the canvas size
 // to fit in the center pane of the GameBorderPane. 
 public class GameWorld extends Canvas {
+	// Array to hold all skeleton animation frames (images)
 	private Image[] skeletonFrames;
+	
+	// Tracks which frame of the animation is currently being displayed
 	private int currentFrame = 0;
+	
+	// The timer that drives the animation by repeatedly calling handle()
 	private AnimationTimer animationTimer;
+	
+	// Stores the time stamp of when the last frame change occurred (in nanoseconds)
 	private long lastFrameTime = 0;
+	
+	// How long to wait between frame changes (50 milliseconds = 0.05 seconds)
 	private final long FRAME_DURATION = 50_000_000;
+	
+	// Tracks whether we've seen frame 11 (last frame) to detect when one complete cycle finishes
 	private boolean cycle = false;
 	
     public GameWorld() {
+        // Create canvas with 700x700 pixel dimensions
         super(700, 700);
         
+        // Draw the background scenery (sky, ground, mountains, sun)
         drawBackground();
         
+        // Load all 12 skeleton animation frames into memory
         loadSkeletonFrames();
         
+        // Draw the initial skeleton image (frame 1) so it's visible before animation starts
         drawInitialSkeleton();
-        
     }
 
 	private void drawBackground() {
+		// Get the graphics context to draw on this canvas
     	GraphicsContext gc = this.getGraphicsContext2D();
         
-        // Paint the sky
+        // Paint the sky - light blue rectangle covering entire canvas
         gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(0, 0, 700, 700);  
         
-        // Paint the ground
+        // Paint the ground - green rectangle for lower portion
         gc.setFill(Color.rgb(100, 200, 100));
         gc.fillRect(0, 240, 700, 460);  
         
-        // Mountains/Triangle gradient 
+        // Create gradient for mountains - white at top, gray in middle, brown at bottom
         Stop[] mountainStops = new Stop[] {
             new Stop(0, Color.WHITE),
             new Stop(0.3, Color.LIGHTGRAY),
@@ -60,7 +75,7 @@ public class GameWorld extends Canvas {
             mountainStops
         );
         
-        // Triangle/Mountain 1 
+        // Draw first triangle/mountain using gradient
         gc.setFill(gradient);
         gc.setStroke(gradient);
         gc.setLineWidth(2);
@@ -72,7 +87,7 @@ public class GameWorld extends Canvas {
         gc.fill();
         gc.stroke();
         
-        // Triangle/Mountain 2 
+        // Draw second triangle/mountain using same gradient
         gc.beginPath();
         gc.moveTo(250, 50);
         gc.lineTo(150, 300);
@@ -81,7 +96,7 @@ public class GameWorld extends Canvas {
         gc.fill();
         gc.stroke();
         
-        // Sun gradient 
+        // Create radial gradient for sun - yellow in center, orange at edges
         Stop[] sunGradient = new Stop[] {
             new Stop(0, Color.rgb(255, 220, 100)),
             new Stop(1, Color.rgb(255, 100, 30))
@@ -94,80 +109,97 @@ public class GameWorld extends Canvas {
             sunGradient
         );
 
-        // Sun
+        // Draw the sun as an arc in the upper right corner
         gc.setFill(radialGradient);
-        gc.fillArc(580, 0, 100, 100, 90, 360, ArcType.OPEN);  // Changed from 900 to 580
+        gc.fillArc(580, 0, 100, 100, 90, 360, ArcType.OPEN);
     }
     
     private void loadSkeletonFrames() {
+    	// We have 12 skeleton animation frames total
     	int numberOfFrames = 12;
     	skeletonFrames = new Image[numberOfFrames];
     	
+    	// Load each skeleton image file into the array (starting at index 1)
     	for (int i = 1; i < numberOfFrames; i++) {
     		skeletonFrames[i] = new Image("Images/skeleton_" + i + ".png");
     	}
     }
     
     public void startAnimation() {
+    	// Get the graphics context for drawing
         GraphicsContext gc = this.getGraphicsContext2D();
         
+        // Create an AnimationTimer that will repeatedly call handle() ~60 times per second
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+            	// Only update the frame if enough time has passed (50ms)
+            	// This controls the speed of the animation
                 if (now - lastFrameTime >= FRAME_DURATION) {
                     
-                    // Redraw the background
+                    // Clear the canvas by redrawing the background
                     drawBackground();
                     
-                    // Draw the skeleton 
+                    // Draw the current skeleton frame if it exists
                     if (skeletonFrames[currentFrame] != null) {
                         Image currentImage = skeletonFrames[currentFrame];
                         
-                        // Scale factor 
+                        // Scale the image to 50% of its original size
                         double scale = 0.5;  
                         
                         double width = currentImage.getWidth() * scale;
                         double height = currentImage.getHeight() * scale;
                         
-                        // Center position
+                        // Calculate position to center the skeleton on the canvas
                         double x = 350 - width / 2;
                         double y = 350 - height / 2;
                         
-                        // Draw with scaled dimensions
+                        // Draw the skeleton image at the calculated position
                         gc.drawImage(currentImage, x, y, width, height);
                     }
                     
+                    // Move to the next frame, wrapping back to 0 after the last frame
+                    // This is what creates the looping animation
                     currentFrame = (currentFrame + 1) % skeletonFrames.length;
 
+                    // Check if we've completed one full animation cycle
+                    // If we're back at frame 0 and we've already seen frame 11, stop the animation
                     if (currentFrame == 0 && cycle) {
                         animationTimer.stop();
-                        cycle = false;
+                        cycle = false; // Reset for next animation
                     } else if (currentFrame == 11) {
+                        // Mark that we've reached the last frame
                         cycle = true;
                     }
+                    
+                    // Record the time of this frame change
                     lastFrameTime = now;
                 }
             }
         };
         
+        // Start the animation timer (begins calling handle() repeatedly)
         animationTimer.start();
     }
     
     private void drawInitialSkeleton() {
+    	// Get the graphics context for drawing
     	GraphicsContext gc = this.getGraphicsContext2D();
     	
+    	// Use the first skeleton frame (frame 1) from our pre-loaded array
 		Image initialImage = skeletonFrames[1];
-		// Scale factor 
+		
+		// Scale the image to 50% of its original size
         double scale = 0.5;  
         
         double width = initialImage.getWidth() * scale;
         double height = initialImage.getHeight() * scale;
         
-        // Center position
+        // Calculate position to center the skeleton on the canvas
         double x = 350 - width / 2;
         double y = 350 - height / 2;
         
-        // Draw with scaled dimensions
+        // Draw the skeleton image so it's visible when the game first loads
         gc.drawImage(initialImage, x, y, width, height);
 	}
 }
