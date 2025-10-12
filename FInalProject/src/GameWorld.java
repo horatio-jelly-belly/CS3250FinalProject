@@ -19,20 +19,10 @@ public class GameWorld extends Canvas {
 	// Array to hold all skeleton animation frames (images)
 	private Image[] skeletonFrames;
 	
-	// Tracks which frame of the animation is currently being displayed
-	private int currentFrame = 0;
-	
 	// The timer that drives the animation by repeatedly calling handle()
 	private AnimationTimer animationTimer;
 	
-	// Stores the time stamp of when the last frame change occurred (in nanoseconds)
-	private long lastFrameTime = 0;
-	
-	// How long to wait between frame changes (50 milliseconds = 0.05 seconds)
-	private final long FRAME_DURATION = 50_000_000;
-	
-	// Tracks whether we've seen frame 11 (last frame) to detect when one complete cycle finishes
-	private boolean cycle = false;
+	private SkeletonController skeletonController;
 	
     public GameWorld() {
         // Create canvas with 700x700 pixel dimensions
@@ -43,6 +33,8 @@ public class GameWorld extends Canvas {
         
         // Load all 12 skeleton animation frames into memory
         loadSkeletonFrames();
+        
+        skeletonController = new SkeletonController(skeletonFrames.length);
         
         // Draw the initial skeleton image (frame 1) so it's visible before animation starts
         drawInitialSkeleton();
@@ -132,17 +124,17 @@ public class GameWorld extends Canvas {
         // Create an AnimationTimer that will repeatedly call handle() ~60 times per second
         animationTimer = new AnimationTimer() {
             @Override
-            public void handle(long now) {
-            	// Only update the frame if enough time has passed (50ms)
+            public void handle(long now) {// Only update the frame if enough time has passed (50ms)
             	// This controls the speed of the animation
-                if (now - lastFrameTime >= FRAME_DURATION) {
-                    
+                if (skeletonController.update(now)) {
+                	
                     // Clear the canvas by redrawing the background
                     drawBackground();
                     
+                    Image currentImage = skeletonFrames[skeletonController.getCurrentFrame()];
+                    
                     // Draw the current skeleton frame if it exists
-                    if (skeletonFrames[currentFrame] != null) {
-                        Image currentImage = skeletonFrames[currentFrame];
+                    if (currentImage != null) {
                         
                         // Scale the image to 50% of its original size
                         double scale = 0.5;  
@@ -156,24 +148,12 @@ public class GameWorld extends Canvas {
                         
                         // Draw the skeleton image at the calculated position
                         gc.drawImage(currentImage, x, y, width, height);
+                        
+                        
                     }
-                    
-                    // Move to the next frame, wrapping back to 0 after the last frame
-                    // This is what creates the looping animation
-                    currentFrame = (currentFrame + 1) % skeletonFrames.length;
-
-                    // Check if we've completed one full animation cycle
-                    // If we're back at frame 0 and we've already seen frame 11, stop the animation
-                    if (currentFrame == 0 && cycle) {
-                        animationTimer.stop();
-                        cycle = false; // Reset for next animation
-                    } else if (currentFrame == 11) {
-                        // Mark that we've reached the last frame
-                        cycle = true;
+                    if (skeletonController.isAnimationComplete()) {
+                    	animationTimer.stop();
                     }
-                    
-                    // Record the time of this frame change
-                    lastFrameTime = now;
                 }
             }
         };
