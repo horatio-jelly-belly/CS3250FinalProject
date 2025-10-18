@@ -9,7 +9,7 @@ public class Player {
     private int attackPoints;
     private int defense;
     private int speed;
-    private int level;
+    private int level = 1;
     private boolean isAlive;
     private boolean isMagical;
     private int mana;
@@ -17,9 +17,9 @@ public class Player {
     private int magicPower;
     private int magicResistance;
     private List<Spell> knownSpells;
-    private int experience; 
+    private int experience;
     private Random random;
-    private Inventory inventory;
+    //private Inventory inventory;
     
     // Constructor
     public Player(String name, int maxHitPoints, int attackPoints, 

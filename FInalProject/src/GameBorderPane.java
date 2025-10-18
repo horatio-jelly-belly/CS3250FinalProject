@@ -34,14 +34,39 @@ public class GameBorderPane extends BorderPane {
 		
 		// HBox to hold hit point labels
 		HBox hitPointsHBox = new HBox();
-		Label hitPoints = new Label("Hitpoints:");
+		Label hitPointsLabel = new Label("Hitpoints: ");
 		Label currentHitPoints = new Label(String.valueOf(player.getHitPoints()));
-		hitPointsHBox.getChildren().addAll(hitPoints, currentHitPoints);
+		hitPointsHBox.getChildren().addAll(hitPointsLabel, currentHitPoints);
 		
-		leftPane.getChildren().add(hitPointsHBox);
+		// HBox to hold level of player
+		HBox levelHBox = new HBox();
+		Label levelLabel = new Label("Level: ");
+		Label currentLevelLabel = new Label(String.valueOf(player.getLevel()));
+		levelHBox.getChildren().addAll(levelLabel, currentLevelLabel);
+		
+		// HBox to hold mana information
+		HBox manaHBox = new HBox();
+		Label manaLabel = new Label("Mana: ");
+		Label currentManaLabel = new Label(String.valueOf(player.getMana()));
+		manaHBox.getChildren().addAll(manaLabel, currentManaLabel);
+		
+		// HBox to hold spells available
+		HBox spellsHBox = new HBox();
+		Label spellsLabel = new Label("Spells: ");
+		Label currentSpellsAvailable = new Label("Fire, Ice");
+		spellsHBox.getChildren().addAll(spellsLabel, currentSpellsAvailable);
+		
+		// VBox for Player statistics
+		VBox playerStatsVBox = new VBox();
+		playerStatsVBox.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+		playerStatsVBox.setPadding(new Insets(2));
+		playerStatsVBox.getChildren().addAll(hitPointsHBox, levelHBox, manaHBox, spellsHBox);
+		
+		leftPane.getChildren().add(playerStatsVBox);
 		leftPane.setAlignment(Pos.TOP_CENTER);
 		leftPane.setSpacing(10);
 		leftPane.setPadding(new Insets(10));
+		leftPane.setStyle("-fx-background-color: lightgray");
 		
 		// To hold the actual game animation itself
 		gameWorld.setStyle("-fx-border-color: black; -fx-border-width: 0 2 0 0;");
@@ -53,6 +78,7 @@ public class GameBorderPane extends BorderPane {
 		rightPane.setMinWidth(200);
 		rightPane.setStyle("-fx-border-color: black; -fx-border-width: 0 0 0 2;");
 		rightPane.setAlignment(Pos.BOTTOM_LEFT);
+		rightPane.setStyle("-fx-background-color: lightgray");
 		
 		// Button to cast spell
 		Button castSpellButton = new Button("Cast Spell!");
@@ -85,5 +111,4 @@ public class GameBorderPane extends BorderPane {
 		setRight(rightPane);
 		 
 	}
-
 }
