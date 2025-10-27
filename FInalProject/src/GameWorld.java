@@ -103,15 +103,16 @@ public class GameWorld extends Canvas {
     
     private void loadSkeletonFrames() {
         // We have 12 skeleton animation frames (skeleton_1.png through skeleton_12.png)
-        // Using array size of 13 so we can use indices 1-12 to match file names
+        // Using array size of 13 to use indices 1-12 to match file names
         skeletonFrames = new Image[13];
         
         // Load each skeleton image file into the array
         // Now loading ALL 12 images (1 through 12)
+        // skeletonFrames[0] remains null - it's never accessed
         for (int i = 1; i <= 12; i++) {
             skeletonFrames[i] = new Image("Images/skeleton_" + i + ".png");
         }
-        // skeletonFrames[0] remains null - it's never accessed
+        
     }
     
     public void startAnimation() {
