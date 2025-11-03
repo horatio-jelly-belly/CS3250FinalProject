@@ -13,11 +13,15 @@ public class GameBorderPane extends BorderPane {
 	// I asked Claude where to instantiate an object of the player class because I didn't 
 	// know if I should do it here, or in Main.java. Claude said to do it here.
 	private Player player;
+	private Enemy enemy;
 	private GameWorld gameWorld = new GameWorld();
 	
 	public GameBorderPane() {
 		// Create an instance of Player
-		player = new Player("Hero", 100, 15, 10, 12, true);
+		player = new Player(100, 15, 10, 12);
+		
+		// Create an instance of an enemy
+		enemy = new Enemy(99, 12, 8, 10);
 		
 		// To hold game information such as score and level of player
 		Pane topPane = new Pane();
@@ -38,29 +42,23 @@ public class GameBorderPane extends BorderPane {
 		Label currentHitPoints = new Label(String.valueOf(player.getHitPoints()));
 		hitPointsHBox.getChildren().addAll(hitPointsLabel, currentHitPoints);
 		
-		// HBox to hold level of player
-		HBox levelHBox = new HBox();
-		Label levelLabel = new Label("Level: ");
-		Label currentLevelLabel = new Label(String.valueOf(player.getLevel()));
-		levelHBox.getChildren().addAll(levelLabel, currentLevelLabel);
+		// HBox to hold hitpoints of player
+		HBox maxHitPointsHBox = new HBox();
+		Label maxHitPointsLabel = new Label("Max Hitpoints: ");
+		Label currentMaxHitPointsLabel = new Label(String.valueOf(player.getMaxHitPoints()));
+		maxHitPointsHBox.getChildren().addAll(maxHitPointsLabel, currentMaxHitPointsLabel);
 		
-		// HBox to hold mana information
-		HBox manaHBox = new HBox();
-		Label manaLabel = new Label("Mana: ");
-		Label currentManaLabel = new Label(String.valueOf(player.getMana()));
-		manaHBox.getChildren().addAll(manaLabel, currentManaLabel);
-		
-		// HBox to hold spells available
-		HBox spellsHBox = new HBox();
-		Label spellsLabel = new Label("Spells: ");
-		Label currentSpellsAvailable = new Label("Fire, Ice");
-		spellsHBox.getChildren().addAll(spellsLabel, currentSpellsAvailable);
+		// HBox to hold defense information
+		HBox defenseHBox = new HBox();
+		Label defenseLabel = new Label("Defense: ");
+		Label currentDefenseLabel = new Label(String.valueOf(player.getDefense()));
+		defenseHBox.getChildren().addAll(defenseLabel, currentDefenseLabel);
 		
 		// VBox for Player statistics
 		VBox playerStatsVBox = new VBox();
 		playerStatsVBox.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 		playerStatsVBox.setPadding(new Insets(2));
-		playerStatsVBox.getChildren().addAll(hitPointsHBox, levelHBox, manaHBox, spellsHBox);
+		playerStatsVBox.getChildren().addAll(hitPointsHBox, maxHitPointsHBox, defenseHBox);
 		
 		leftPane.getChildren().add(playerStatsVBox);
 		leftPane.setAlignment(Pos.TOP_CENTER);
