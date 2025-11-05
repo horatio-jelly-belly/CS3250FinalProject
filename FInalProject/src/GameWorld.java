@@ -116,7 +116,7 @@ public class GameWorld extends Canvas {
         // Now loading ALL 12 images (1 through 12)
         // skeletonFrames[0] remains null - it's never accessed
         for (int i = 1; i <= 12; i++) {
-            skeletonFrames[i] = new Image("Images/skeleton_" + i + ".png");
+            skeletonFrames[i] = new Image("images/skeleton_" + i + ".png");
         }
         
     }
