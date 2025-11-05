@@ -10,14 +10,8 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 
 public class GameWorld extends Canvas {
-    // Load images for both player and enemy sprites using Character sprite
-	private CharacterSprite playerSprite;
-	private CharacterSprite enemySprite;
-	
-	// Game characters
-	private Player player;
-	private Enemy enemy;
-	
+    // Array to hold all skeleton animation frames (images)
+    private Image[] skeletonFrames;
     
     // The timer that drives the animation by repeatedly calling handle()
     private AnimationTimer animationTimer;
@@ -116,7 +110,7 @@ public class GameWorld extends Canvas {
         // Now loading ALL 12 images (1 through 12)
         // skeletonFrames[0] remains null - it's never accessed
         for (int i = 1; i <= 12; i++) {
-            skeletonFrames[i] = new Image("images/skeleton_" + i + ".png");
+            skeletonFrames[i] = new Image("Images/skeleton_" + i + ".png");
         }
         
     }
