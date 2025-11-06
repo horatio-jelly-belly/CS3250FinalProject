@@ -1,4 +1,4 @@
-public class SkeletonController {
+public class AnimationController {
     
     // Tracks which frame of the animation is currently being displayed
     // Start at frame 1 since images are skeleton_1.png through skeleton_12.png
@@ -14,7 +14,7 @@ public class SkeletonController {
     
     private int totalFrames;
     
-    public SkeletonController(int numOfFrames) {
+    public AnimationController(int numOfFrames) {
         this.totalFrames = numOfFrames;
     }
     

@@ -10,13 +10,15 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 
 public class GameWorld extends Canvas {
-    // Array to hold all skeleton animation frames (images)
-    private Image[] skeletonFrames;
+    // Array to hold animation frames (images)
+    private CharacterSprite skeletonSprite;
+    private CharacterSprite minotaurSprite;
     
     // The timer that drives the animation by repeatedly calling handle()
     private AnimationTimer animationTimer;
     
-    private SkeletonController skeletonController;
+    private AnimationController skeletonController;
+    private AnimationController minotaurController;
     
     public GameWorld() {
         // Create canvas with 700x700 pixel dimensions
@@ -25,11 +27,17 @@ public class GameWorld extends Canvas {
         // Draw the background scenery (sky, ground, mountains, sun)
         drawBackground();
         
-        // Load all 12 skeleton animation frames into memory
-        loadSkeletonFrames();
+        // Create the skeleton sprite with its specific parameters
+        // Path: "images/skeleton/", prefix: "skeleton_", 12 frames, starts at 1, no padding
+        skeletonSprite = new CharacterSprite("images/skeleton/", "skeleton_", 12, 1, false);
+        
+        // Create the minotaur sprite with its specific parameters
+        // Path: "images/minotaur/", prefix: "Minotaur_01_Walking_", 18 frames, starts at 0, uses padding
+        minotaurSprite = new CharacterSprite("images/minotaur/", "Minotaur_01_Walking_", 18, 0, true);
         
         // Pass the actual number of frames (12) to the controller
-        skeletonController = new SkeletonController(12);
+        skeletonController = new AnimationController(12);
+        minotaurController = new AnimationController(18);
         
         // Draw the initial skeleton image (frame 1) so it's visible before animation starts
         drawInitialSkeleton();
@@ -101,20 +109,6 @@ public class GameWorld extends Canvas {
         gc.fillArc(580, 0, 100, 100, 90, 360, ArcType.OPEN);
     }
     
-    private void loadSkeletonFrames() {
-        // We have 12 skeleton animation frames (skeleton_1.png through skeleton_12.png)
-        // Using array size of 13 to use indices 1-12 to match file names
-        skeletonFrames = new Image[13];
-        
-        // Load each skeleton image file into the array
-        // Now loading ALL 12 images (1 through 12)
-        // skeletonFrames[0] remains null - it's never accessed
-        for (int i = 1; i <= 12; i++) {
-            skeletonFrames[i] = new Image("Images/skeleton_" + i + ".png");
-        }
-        
-    }
-    
     public void startAnimation() {
         // Stop any existing animation
         if (animationTimer != null) {
@@ -142,7 +136,7 @@ public class GameWorld extends Canvas {
                     
                     // Make sure the frame index is valid
                     if (frameIndex >= 1 && frameIndex <= 12) {
-                        Image currentImage = skeletonFrames[frameIndex];
+                        Image currentImage = skeletonSprite.getFrame(frameIndex);
                         
                         // Draw the current skeleton frame if it exists
                         if (currentImage != null) {
@@ -183,7 +177,7 @@ public class GameWorld extends Canvas {
         drawBackground();
         
         // Use the first skeleton frame (frame 1) from the pre-loaded array
-        Image initialImage = skeletonFrames[1];
+        Image initialImage = skeletonSprite.getFrame(1);
         
         if (initialImage != null) {
             // Scale the image to 50% of its original size

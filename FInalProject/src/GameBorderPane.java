@@ -2,8 +2,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -13,15 +11,11 @@ public class GameBorderPane extends BorderPane {
 	// I asked Claude where to instantiate an object of the player class because I didn't 
 	// know if I should do it here, or in Main.java. Claude said to do it here.
 	private Player player;
-	private Enemy enemy;
 	private GameWorld gameWorld = new GameWorld();
 	
 	public GameBorderPane() {
 		// Create an instance of Player
 		player = new Player(100, 15, 10, 12);
-		
-		// Create an instance of an enemy
-		enemy = new Enemy(99, 12, 8, 10);
 		
 		// To hold game information such as score and level of player
 		Pane topPane = new Pane();
@@ -42,23 +36,11 @@ public class GameBorderPane extends BorderPane {
 		Label currentHitPoints = new Label(String.valueOf(player.getHitPoints()));
 		hitPointsHBox.getChildren().addAll(hitPointsLabel, currentHitPoints);
 		
-		// HBox to hold hitpoints of player
-		HBox maxHitPointsHBox = new HBox();
-		Label maxHitPointsLabel = new Label("Max Hitpoints: ");
-		Label currentMaxHitPointsLabel = new Label(String.valueOf(player.getMaxHitPoints()));
-		maxHitPointsHBox.getChildren().addAll(maxHitPointsLabel, currentMaxHitPointsLabel);
-		
-		// HBox to hold defense information
-		HBox defenseHBox = new HBox();
-		Label defenseLabel = new Label("Defense: ");
-		Label currentDefenseLabel = new Label(String.valueOf(player.getDefense()));
-		defenseHBox.getChildren().addAll(defenseLabel, currentDefenseLabel);
-		
 		// VBox for Player statistics
 		VBox playerStatsVBox = new VBox();
 		playerStatsVBox.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 		playerStatsVBox.setPadding(new Insets(2));
-		playerStatsVBox.getChildren().addAll(hitPointsHBox, maxHitPointsHBox, defenseHBox);
+		playerStatsVBox.getChildren().addAll(hitPointsHBox);
 		
 		leftPane.getChildren().add(playerStatsVBox);
 		leftPane.setAlignment(Pos.TOP_CENTER);
@@ -77,10 +59,7 @@ public class GameBorderPane extends BorderPane {
 		rightPane.setStyle("-fx-border-color: black; -fx-border-width: 0 0 0 2;");
 		rightPane.setAlignment(Pos.BOTTOM_LEFT);
 		rightPane.setStyle("-fx-background-color: lightgray");
-		
-		// Button to cast spell
-		Button castSpellButton = new Button("Cast Spell!");
-		
+
 		// Button to attack the enemy
 		Button attackButton = new Button("Attack!");
 		
@@ -89,19 +68,9 @@ public class GameBorderPane extends BorderPane {
 			gameWorld.startAnimation();
 		});
 		
-		// Radio buttons so that player can choose which spell to cast
-		Label chooseSpellLabel = new Label("Choose your spell");
-		ToggleGroup toggleGroup = new ToggleGroup();
-		
-		// Different spells to cast
-		RadioButton fireRadioButton = new RadioButton("Fire");
-		fireRadioButton.setToggleGroup(toggleGroup);
-		
-		RadioButton iceRadioButton = new RadioButton("Ice");
-		iceRadioButton.setToggleGroup(toggleGroup);
 		
 		// Put nodes in right pane with styling
-		rightPane.getChildren().addAll(chooseSpellLabel, fireRadioButton, iceRadioButton, castSpellButton, attackButton);
+		rightPane.getChildren().addAll(attackButton);
 		rightPane.setAlignment(Pos.BOTTOM_CENTER);
 		rightPane.setSpacing(10);
 		rightPane.setPadding(new Insets(10));
