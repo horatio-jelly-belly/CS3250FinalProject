@@ -12,10 +12,14 @@ public class GameBorderPane extends BorderPane {
 	// know if I should do it here, or in Main.java. Claude said to do it here.
 	private Player player;
 	private GameWorld gameWorld = new GameWorld();
+	private GameController gameController;
 	
 	public GameBorderPane() {
 		// Create an instance of Player
 		player = new Player(100, 15, 10, 12);
+		
+		// Create an instance of GameController and pass it GameWorld
+		gameController = new GameController(gameWorld);
 		
 		// To hold game information such as score and level of player
 		Pane topPane = new Pane();
@@ -65,7 +69,7 @@ public class GameBorderPane extends BorderPane {
 		
 		// Start the animation when attackButton is called
 		attackButton.setOnAction(event -> {
-			gameWorld.startAnimation();
+			gameController.startSkeletonAttack();
 		});
 		
 		

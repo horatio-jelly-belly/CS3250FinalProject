@@ -35,7 +35,7 @@ public class GameWorld extends Canvas {
         // Path: "images/minotaur/", prefix: "Minotaur_01_Walking_", 18 frames, starts at 0, uses padding
         minotaurSprite = new CharacterSprite("images/minotaur/", "Minotaur_01_Walking_", 18, 0, true);
         
-        // Pass the actual number of frames (12) to the controller
+        // Pass the actual number of frames to the controller
         skeletonController = new AnimationController(12);
         minotaurController = new AnimationController(18);
         
