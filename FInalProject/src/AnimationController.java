@@ -1,8 +1,6 @@
 public class AnimationController {
-    
-    // Tracks which frame of the animation is currently being displayed
-    // Start at frame 1 since images are skeleton_1.png through skeleton_12.png
-    private int currentFrame = 1;
+    private int currentFrame;
+    private int startFrame;
     
     // Stores the time stamp of when the last frame change occurred (in nanoseconds)
     private long lastFrameTime = 0;
@@ -14,8 +12,10 @@ public class AnimationController {
     
     private int totalFrames;
     
-    public AnimationController(int numOfFrames) {
+    public AnimationController(int numOfFrames, int startFrame) {
         this.totalFrames = numOfFrames;
+        this.startFrame = startFrame;
+        this.currentFrame = startFrame;
     }
     
     public boolean update(long currentTime) {
@@ -33,11 +33,11 @@ public class AnimationController {
         currentFrame++;
         
         // Check if all frames (1 through 12) are shown
-        if (currentFrame > totalFrames) {
+        if (currentFrame >= startFrame + totalFrames) {
             // Mark animation as complete
             animationComplete = true;
             // Set to last frame (12) so it displays before stopping
-            currentFrame = totalFrames;
+            currentFrame = startFrame + totalFrames - 1;
         }
         
         // Record the time of this frame change
@@ -51,7 +51,7 @@ public class AnimationController {
     }
     
     public void resetAnimation() {
-        currentFrame = 1;
+        currentFrame = startFrame;
         animationComplete = false;
         lastFrameTime = 0;
     }

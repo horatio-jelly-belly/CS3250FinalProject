@@ -1,4 +1,3 @@
-import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -10,39 +9,70 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 
 public class GameWorld extends Canvas {
-    // Array to hold animation frames (images)
-    private CharacterSprite skeletonSprite;
-    private CharacterSprite minotaurSprite;
-    
-    // The timer that drives the animation by repeatedly calling handle()
-    private AnimationTimer animationTimer;
-    
-    private AnimationController skeletonController;
-    private AnimationController minotaurController;
     
     public GameWorld() {
         // Create canvas with 700x700 pixel dimensions
         super(700, 700);
         
-        // Draw the background scenery (sky, ground, mountains, sun)
+        // Draw the initial background
         drawBackground();
-        
-        // Create the skeleton sprite with its specific parameters
-        // Path: "images/skeleton/", prefix: "skeleton_", 12 frames, starts at 1, no padding
-        skeletonSprite = new CharacterSprite("images/skeleton/", "skeleton_", 12, 1, false);
-        
-        // Create the minotaur sprite with its specific parameters
-        // Path: "images/minotaur/", prefix: "Minotaur_01_Walking_", 18 frames, starts at 0, uses padding
-        minotaurSprite = new CharacterSprite("images/minotaur/", "Minotaur_01_Walking_", 18, 0, true);
-        
-        // Pass the actual number of frames to the controller
-        skeletonController = new AnimationController(12);
-        minotaurController = new AnimationController(18);
-        
-        // Draw the initial skeleton image (frame 1) so it's visible before animation starts
-        drawInitialSkeleton();
     }
 
+    // Public method for GameController to call when it needs to redraw the scene
+    public void drawScene(GameController controller) {
+        // Clear and redraw background
+        drawBackground();
+        
+        // Draw minotaur if it's on screen
+        double minotaurX = controller.getMinotaurX();
+        if (minotaurX < 800) {  // Only draw if visible
+            drawSprite(controller.getMinotaurSprite(), 
+                      controller.getMinotaurController().getCurrentFrame(),
+                      minotaurX, 
+                      controller.getMinotaurY(), 
+                      0.5,
+                      true);
+        }
+        
+        // Always draw skeleton
+        drawSprite(controller.getSkeletonSprite(), 
+                  controller.getSkeletonController().getCurrentFrame(),
+                  controller.getSkeletonX(), 
+                  controller.getSkeletonY(), 
+                  0.5,
+                  false);
+    }
+    
+ // Generic method to draw any sprite at any position with any scale
+    private void drawSprite(CharacterSprite sprite, int frameIndex, double x, double y, double scale, boolean flipHorizontal) {
+        GraphicsContext gc = this.getGraphicsContext2D();
+        
+        Image frame = sprite.getFrame(frameIndex);
+        if (frame != null) {
+            double width = frame.getWidth() * scale;
+            double height = frame.getHeight() * scale;
+            
+            if (flipHorizontal) {
+                // Save the current state
+                gc.save();
+                
+                // Flip horizontally by scaling x by -1 and translating
+                gc.scale(-1, 1);
+                
+                // When flipped, we need to draw at the negative x position
+                gc.drawImage(frame, -x - width/2, y - height/2, width, height);
+                
+                // Restore the original state
+                gc.restore();
+            } else {
+                // Normal drawing (not flipped)
+                double drawX = x - width / 2;
+                double drawY = y - height / 2;
+                gc.drawImage(frame, drawX, drawY, width, height);
+            }
+        }
+    }
+    
     private void drawBackground() {
         // Get the graphics context to draw on this canvas
         GraphicsContext gc = this.getGraphicsContext2D();
@@ -107,91 +137,5 @@ public class GameWorld extends Canvas {
         // Draw the sun as an arc in the upper right corner
         gc.setFill(radialGradient);
         gc.fillArc(580, 0, 100, 100, 90, 360, ArcType.OPEN);
-    }
-    
-    public void startAnimation() {
-        // Stop any existing animation
-        if (animationTimer != null) {
-            animationTimer.stop();
-        }
-        
-        // Reset the controller to start from frame 1
-        skeletonController.resetAnimation();
-        
-        // Get the graphics context for drawing
-        GraphicsContext gc = this.getGraphicsContext2D();
-        
-        // Create an AnimationTimer that will repeatedly call handle() ~60 times per second
-        animationTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Only update the frame if enough time has passed (50ms)
-                // This controls the speed of the animation
-                if (skeletonController.update(now)) {
-                    
-                    // Clear the canvas by redrawing the background
-                    drawBackground();
-                    
-                    int frameIndex = skeletonController.getCurrentFrame();
-                    
-                    // Make sure the frame index is valid
-                    if (frameIndex >= 1 && frameIndex <= 12) {
-                        Image currentImage = skeletonSprite.getFrame(frameIndex);
-                        
-                        // Draw the current skeleton frame if it exists
-                        if (currentImage != null) {
-                            
-                            // Scale the image to 50% of its original size
-                            double scale = 0.5;  
-                            
-                            double width = currentImage.getWidth() * scale;
-                            double height = currentImage.getHeight() * scale;
-                            
-                            // Calculate position to center the skeleton on the canvas
-                            double x = 350 - width / 2;
-                            double y = 350 - height / 2;
-                            
-                            // Draw the skeleton image at the calculated position
-                            gc.drawImage(currentImage, x, y, width, height);
-                        }
-                    }
-                    
-                    if (skeletonController.isAnimationComplete()) {
-                        animationTimer.stop();
-                        // Reset to the first frame when animation ends
-                        drawInitialSkeleton();
-                    }
-                }
-            }
-        };
-        
-        // Start the animation timer (begins calling handle() repeatedly)
-        animationTimer.start();
-    }
-    
-    private void drawInitialSkeleton() {
-        // Get the graphics context for drawing
-        GraphicsContext gc = this.getGraphicsContext2D();
-        
-        // Clear and redraw background first
-        drawBackground();
-        
-        // Use the first skeleton frame (frame 1) from the pre-loaded array
-        Image initialImage = skeletonSprite.getFrame(1);
-        
-        if (initialImage != null) {
-            // Scale the image to 50% of its original size
-            double scale = 0.5;  
-            
-            double width = initialImage.getWidth() * scale;
-            double height = initialImage.getHeight() * scale;
-            
-            // Calculate position to center the skeleton on the canvas
-            double x = 350 - width / 2;
-            double y = 350 - height / 2;
-            
-            // Draw the skeleton image so it's visible when the game first loads
-            gc.drawImage(initialImage, x, y, width, height);
-        }
     }
 }

@@ -8,9 +8,9 @@ public class GameController {
 	private AnimationController minotaurController;
 	
 	// Position tracking for characters
-	private double skeletonX = 500;
-	private double skeleonty = 350;
-	private double minotaurX = -100;
+	private double skeletonX = 200;
+	private double skeletonY = 350;
+	private double minotaurX = 800;
 	private double minotaurY = 350;
 	
 	// Reference to the GameWorld for rendering
@@ -38,8 +38,8 @@ public class GameController {
 	}
 	
 	private void initializeControllers() {
-		skeletonController = new AnimationController(12);
-		minotaurController = new AnimationController(18);
+		skeletonController = new AnimationController(12, 1);
+		minotaurController = new AnimationController(18, 0);
 	}
 	
 	// Called when attack button is pressed
@@ -90,7 +90,7 @@ public class GameController {
 				}
 				
 				if (needsRedraw) {
-					gameWorld.drawScene(this);
+					gameWorld.drawScene(GameController.this);
 				}
 				
 				// Stop game loop if nothing is animating
@@ -101,5 +101,58 @@ public class GameController {
 		};
 		
 		gameLoop.start();
+	}
+	
+	private void updateMinotaurPosition() {
+		// Move minotaur to the right
+		minotaurX -= 3;
+		
+		// Stop when close to skeleton
+		if (isInAttackRange()) {
+			isMinotaurWalking = false;
+		}
+	}
+	
+	private boolean isInAttackRange() {
+		double distance = Math.abs(skeletonX - minotaurX);
+		return distance < 150; 
+	}
+	
+	// Getters for GameWorld to access when drawing
+	public CharacterSprite getSkeletonSprite() { 
+	    return skeletonSprite; 
+	}
+
+	public CharacterSprite getMinotaurSprite() { 
+	    return minotaurSprite; 
+	}
+
+	public AnimationController getSkeletonController() { 
+	    return skeletonController; 
+	}
+
+	public AnimationController getMinotaurController() { 
+	    return minotaurController; 
+	}
+
+	public double getSkeletonX() { 
+	    return skeletonX; 
+	}
+
+	public double getSkeletonY() { 
+	    return skeletonY;  
+	}
+
+	public double getMinotaurX() { 
+	    return minotaurX; 
+	}
+
+	public double getMinotaurY() { 
+	    return minotaurY; 
+	}
+
+	// Draw the initial scene
+	public void initializeScene() {
+	    gameWorld.drawScene(this);
 	}
 }

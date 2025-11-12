@@ -14,12 +14,15 @@ public class GameBorderPane extends BorderPane {
 	private GameWorld gameWorld = new GameWorld();
 	private GameController gameController;
 	
+	
 	public GameBorderPane() {
 		// Create an instance of Player
 		player = new Player(100, 15, 10, 12);
 		
 		// Create an instance of GameController and pass it GameWorld
 		gameController = new GameController(gameWorld);
+		gameController.initializeScene();
+		gameController.startMinotaurApproach();
 		
 		// To hold game information such as score and level of player
 		Pane topPane = new Pane();
