@@ -16,6 +16,7 @@ public class GameWorld extends Canvas {
         
         // Draw the initial background
         drawBackground();
+        
     }
 
     // Public method for GameController to call when it needs to redraw the scene
