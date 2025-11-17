@@ -9,7 +9,8 @@ public class CharacterSprite {
 	private int startIndex;
 	private boolean usePadding;
 	
-	// TODO: A method to load its Sprites
+	// TODO: A method to load character sprites
+	// Both sprite characters are from craftpix.net
 	public CharacterSprite(String spritePath, String filePrefix, int frameCount, int startIndex, boolean usePadding) {
 		this.spritePath = spritePath;
 		this.filePrefix = filePrefix;
@@ -46,10 +47,8 @@ public class CharacterSprite {
 			 int fileNumber = startIndex + i;
 			 
 			 if (usePadding) {
-				 // For minotaur: uses 3-digit padding like "001", "002", etc.
 	             filename = String.format("%s%s%03d.png", spritePath, filePrefix, fileNumber);
 	         } else {
-	             // For skeleton: no padding, just "1", "2", etc.
 	             filename = String.format("%s%s%d.png", spritePath, filePrefix, fileNumber);
 	         }
 			 
