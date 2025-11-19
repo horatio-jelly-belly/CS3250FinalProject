@@ -115,7 +115,7 @@ public class GameController {
 	
 	private boolean isInAttackRange() {
 		double distance = Math.abs(skeletonX - minotaurX);
-		return distance < 150; 
+		return distance < 225; 
 	}
 	
 	// Getters for GameWorld to access when drawing
