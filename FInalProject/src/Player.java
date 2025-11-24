@@ -1,10 +1,30 @@
-
+/**
+ * Represents the player's character in the game.
+ * Extends Character to inherit common stats and behaviors.
+ * Can be expanded with player-specific features like inventory and skills.
+ */
 public class Player extends Character {
 
-	public Player(int maxHitPoints, int attackPoints, int defense, int speed) {
-		super(maxHitPoints, attackPoints, defense, speed);
-		// TODO Auto-generated constructor stub
-	}
-	
+    /**
+     * Constructor to create the player character with specified stats.
+     * Passes all parameters to the parent Character constructor.
+     * @param maxHitPoints Maximum and starting health
+     * @param attackPoints Damage dealing capability  
+     * @param defense Damage reduction capability
+     * @param speed Turn order/movement speed
+     */
+    public Player(int maxHitPoints, int attackPoints, int defense) {
+        super(maxHitPoints, attackPoints, defense);
+        // TODO Auto-generated constructor stub
+        // This is where player-specific initialization would go
+        // Examples: starting inventory, unlocked skills, player name
+    }
+    
+    // Future player-specific methods could include:
+    // - Inventory management (addItem, removeItem, useItem)
+    // - Experience and leveling system
+    // - Skill/spell learning and usage
+    // - Save/load game state
+    // - Equipment management (weapons, armor)
+    // - Player input handling for combat choices
 }
-
