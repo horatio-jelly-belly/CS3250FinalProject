@@ -5,18 +5,16 @@
  */
 public class Character {
     // Attributes
-    
+	
     /**
      * Current health points of the character.
      * When this reaches 0, the character is defeated.
-     * Can be reduced by damage and potentially restored by healing.
      */
     private int hitPoints;
     
     /**
      * Maximum health points the character can have.
-     * Used as the starting value and ceiling for healing.
-     * Prevents overhealing beyond the character's natural limit.
+     * Used as the starting value.
      */
     private int maxHitPoints;
     
@@ -37,7 +35,7 @@ public class Character {
     /**
      * Flag indicating if the character is still active in combat.
      * Set to false when hitPoints reaches 0.
-     * Used to determine if character can still perform actions.
+     * Remove character when isAlive is false
      */
     private boolean isAlive;
     
@@ -110,8 +108,17 @@ public class Character {
     /**
      * Processes damage taken by the character.
      * Empty method to be overridden by subclasses (Player/Enemy).
-     * Will likely reduce hitPoints and check for defeat.
-     * Different character types might have different damage responses.
+     * Reduces hitPoints and check for defeat.
      */
-    public void takeDamage() {};
+    public void takeDamage(int attackPoints) {
+    	reduceHitPoints(attackPoints);
+    };
+    
+    protected void reduceHitPoints(int amount) {
+    	this.hitPoints -= amount;
+    	if (this.hitPoints <= 0) {
+    		this.hitPoints = 0;
+    		this.isAlive = false;
+    	}
+    }
 }

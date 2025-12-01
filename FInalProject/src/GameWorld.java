@@ -21,7 +21,7 @@ public class GameWorld extends Canvas {
      */
     public GameWorld() {
         // Create canvas with 700x700 pixel dimensions
-        // Square canvas provides equal space for horizontal and vertical gameplay
+        // Square canvas provides equal space for horizontal and vertical game play
         super(700, 700);
         
         // Draw the initial background

@@ -17,7 +17,7 @@ public class AnimationController {
     private int startFrame;
     
     /**
-     * Stores the timestamp (in nanoseconds) of when the last frame change occurred.
+     * Stores the time stamp (in nanoseconds) of when the last frame change occurred.
      * Used to calculate if enough time has passed to advance to the next frame.
      */
     private long lastFrameTime = 0;

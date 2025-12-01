@@ -196,8 +196,10 @@ public class GameController {
                     
                     // Check if attack animation finished
                     if (skeletonController.isAnimationComplete()) {
+                    	minotaurEnemy.takeDamage(skeletonPlayer.getAttackPoints());		// When animation is complete reduce minotaur's hitpoints
                         isSkeletonAttacking = false;      // Clear attack flag
                         skeletonController.resetAnimation(); // Ready for next attack
+                        
                     }
                 }
                 

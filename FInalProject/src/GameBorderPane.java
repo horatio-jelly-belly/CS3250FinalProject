@@ -116,7 +116,6 @@ public class GameBorderPane extends BorderPane {
         enemyHeader.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
         enemyStatsVBox.getChildren().addAll(enemyHeader, enemyHitPointsHBox, enemyAttackPointsHBox, enemyDefensePointsHBox);
         
-        
         // Configure left pane layout and styling
         leftPane.getChildren().addAll(playerStatsVBox, enemyStatsVBox);
         leftPane.setAlignment(Pos.TOP_CENTER);  // Center stats at top
