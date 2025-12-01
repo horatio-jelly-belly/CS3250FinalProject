@@ -40,9 +40,9 @@ public class GameWorld extends Canvas {
         // Ensures clean slate for each frame (no ghosting)
         drawBackground();
         
-        // Draw minotaur if it's on screen
+        // Draw minotaur if it's on screen and alive
         double minotaurX = controller.getMinotaurX();
-        if (minotaurX < 800) {  // Only draw if visible (800 is off-screen right)
+        if (minotaurX < 800 && controller.getEnemy().isAlive()) {  
             drawSprite(controller.getMinotaurSprite(), 
                       controller.getMinotaurController().getCurrentFrame(),
                       minotaurX, 

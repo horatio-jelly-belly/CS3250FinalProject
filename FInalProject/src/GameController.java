@@ -1,4 +1,5 @@
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.Label;
 
 /**
  * Main game logic controller that manages animations and game state.
@@ -8,6 +9,8 @@ import javafx.animation.AnimationTimer;
 public class GameController {
     // Sprites and their controllers and character instances
     
+	private Label enemyHitPointsLabel;
+	
     /**
      * Sprite manager for skeleton character images.
      * Handles loading and accessing skeleton animation frames.
@@ -112,6 +115,10 @@ public class GameController {
         initializeControllers(); // Create animation controllers
     }
     
+    public void setEnemyHitPointsLabel(Label label) {
+    	this.enemyHitPointsLabel = label;
+    }
+    
     /**
      * Creates character instances with their combat statistics.
      * Initializes both player and enemy characters for the game session.
@@ -147,11 +154,12 @@ public class GameController {
     /**
      * Initiates skeleton attack animation sequence.
      * Called when attack button is pressed by player.
-     * Only starts if skeleton is in range of the enemy.
+     * Only starts if skeleton is in range of the enemy
+     * and there is an enemy to attack.
      */
     public void startSkeletonAttack() {
-        // Check conditions: not already attacking AND enemy is close enough
-        if (!isSkeletonAttacking && isInAttackRange()) {
+        // Check conditions: not already attacking and enemy is close enough and there is an enemy to attack
+        if (!isSkeletonAttacking && isInAttackRange() && minotaurEnemy.isAlive()) {
             isSkeletonAttacking = true;           // Set attack state flag
             skeletonController.resetAnimation();  // Start from first frame
             startGameLoop();                      // Begin animation updates
@@ -197,6 +205,7 @@ public class GameController {
                     // Check if attack animation finished
                     if (skeletonController.isAnimationComplete()) {
                     	minotaurEnemy.takeDamage(skeletonPlayer.getAttackPoints());		// When animation is complete reduce minotaur's hitpoints
+                    	enemyHitPointsLabel.setText(String.valueOf(minotaurEnemy.getHitPoints()));
                         isSkeletonAttacking = false;      // Clear attack flag
                         skeletonController.resetAnimation(); // Ready for next attack
                         
