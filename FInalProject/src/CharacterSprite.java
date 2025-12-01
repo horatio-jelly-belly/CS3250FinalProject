@@ -3,7 +3,7 @@ import javafx.scene.image.Image;
 /**
  * Manages sprite sheet loading and frame access for animated characters.
  * Generic class that can handle different sprite naming conventions and frame counts.
- * Loads all animation frames into memory for quick access during gameplay.
+ * Loads all animation frames into memory for quick access during game play.
  */
 public class CharacterSprite {
     /**

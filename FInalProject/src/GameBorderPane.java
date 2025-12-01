@@ -16,7 +16,7 @@ public class GameBorderPane extends BorderPane {
     
     /**
      * The game canvas where all animations and graphics are rendered.
-     * Central display area for the actual gameplay visuals.
+     * Central display area for the actual game play visuals.
      */
     private GameWorld gameWorld = new GameWorld();
     

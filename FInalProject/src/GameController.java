@@ -9,6 +9,12 @@ import javafx.scene.control.Label;
 public class GameController {
     // Sprites and their controllers and character instances
     
+	/**
+	 * Reference to the UI label displaying enemy hit points.
+	 * Stored here so the controller can update the display when damage is dealt.
+	 * This connects the business logic (damage calculation) to the UI layer
+	 * without the controller needing to know about the full UI structure.
+	 */
 	private Label enemyHitPointsLabel;
 	
     /**
@@ -115,8 +121,14 @@ public class GameController {
         initializeControllers(); // Create animation controllers
     }
     
+    /**
+     * Sets the reference to the enemy HP label for UI updates.
+     * Called by GameBorderPane during initialization to establish
+     * the connection between game logic and UI display.
+     * @param label The Label component showing enemy hit points
+     */
     public void setEnemyHitPointsLabel(Label label) {
-    	this.enemyHitPointsLabel = label;
+        this.enemyHitPointsLabel = label;
     }
     
     /**
