@@ -81,6 +81,10 @@ public class GameWorld extends Canvas {
             double width = frame.getWidth() * scale;
             double height = frame.getHeight() * scale;
             
+            /**
+             * I had Claude help me with flipping the minotaur image so that 
+             * it faced the skeleton.
+             */
             if (flipHorizontal) {
                 // Save the current transformation state
                 // Allows us to modify then restore transformations

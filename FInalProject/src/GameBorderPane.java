@@ -142,6 +142,9 @@ public class GameBorderPane extends BorderPane {
         // Button to trigger skeleton attack animation
         // When clicked, initiates the attack sequence
         Button attackButton = new Button("Attack!");
+	    // Bind button's disabled state to opposite of canAttack
+	    // Button is disabled when canAttack is false (enemy not in range)
+	    attackButton.disableProperty().bind(gameController.canAttackProperty().not());
         
         // Event handler for attack button
         // Delegates to controller to maintain separation of concerns

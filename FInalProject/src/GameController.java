@@ -1,4 +1,5 @@
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.*;
 import javafx.scene.control.Label;
 
 /**
@@ -96,6 +97,13 @@ public class GameController {
     private AnimationTimer gameLoop;
     
     // Game state flags
+    
+    /**
+     * Observable property indicating whether player can currently attack.
+     * Bound to UI to automatically enable/disable attack button.
+     * True when enemy is in range and alive.
+     */
+    private BooleanProperty canAttack = new SimpleBooleanProperty(false);
     
     /**
      * Flag indicating if minotaur is currently walking.
@@ -217,7 +225,7 @@ public class GameController {
                     // Check if attack animation finished
                     if (skeletonController.isAnimationComplete()) {
                     	minotaurEnemy.takeDamage(skeletonPlayer.getAttackPoints());		// When animation is complete reduce minotaur's hitpoints
-                    	enemyHitPointsLabel.setText(String.valueOf(minotaurEnemy.getHitPoints()));
+                    	enemyHitPointsLabel.setText(String.valueOf(minotaurEnemy.getHitPoints())); // Change the current hit points label
                         isSkeletonAttacking = false;      // Clear attack flag
                         skeletonController.resetAnimation(); // Ready for next attack
                         
@@ -262,6 +270,7 @@ public class GameController {
         // Stop walking when close enough to attack
         if (isInAttackRange()) {
             isMinotaurWalking = false;  // Stop walk animation
+            canAttack.set(true);
         }
     }
     
@@ -368,4 +377,14 @@ public class GameController {
     	return minotaurEnemy;
     }
     
+    // Getters for GameBorderPane to access
+    
+    /**
+     * Exposes the attack availability state for UI binding.
+     * True when enemy is in range and alive, false otherwise.
+     * @return Observable property that UI components can bind to
+     */
+    public BooleanProperty canAttackProperty() {
+        return canAttack;
+    }
 }
