@@ -30,6 +30,8 @@ public class GameController {
      */
     private CharacterSprite minotaurSprite;
     
+    private CharacterSprite minotaurAttackSprite;
+    
     /**
      * Animation timing controller for skeleton.
      * Manages frame progression and timing for skeleton animations.
@@ -41,6 +43,8 @@ public class GameController {
      * Manages frame progression and timing for minotaur animations.
      */
     private AnimationController minotaurController;
+    
+    private AnimationController minotaurAttackController;
     
     /**
      * The enemy character instance representing the minotaur.
@@ -160,6 +164,9 @@ public class GameController {
         // Create the minotaur sprite  
         // 18 frames, starting at index 0, with zero-padding in filenames
         minotaurSprite = new CharacterSprite("images/minotaur/", "Minotaur_01_Walking_", 18, 0, true);
+        
+        
+        minotaurAttackSprite = new CharacterSprite("images/minotaur_attacking/", "Minotaur_01_Attacking_", 12, 0, true);
     }
     
     /**
@@ -169,6 +176,7 @@ public class GameController {
     private void initializeControllers() {
         skeletonController = new AnimationController(12, 1);  // 12 frames, starts at 1
         minotaurController = new AnimationController(18, 0);  // 18 frames, starts at 0
+        minotaurAttackController = new AnimationController(12, 0);
     }
     
     /**
