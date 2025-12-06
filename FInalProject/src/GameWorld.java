@@ -40,15 +40,39 @@ public class GameWorld extends Canvas {
         // Ensures clean slate for each frame (no ghosting)
         drawBackground();
         
-        // Draw minotaur if it's on screen and alive
+     // Draw minotaur if it's on screen and alive
         double minotaurX = controller.getMinotaurX();
         if (minotaurX < 800 && controller.getEnemy().isAlive()) {  
-            drawSprite(controller.getMinotaurSprite(), 
-                      controller.getMinotaurController().getCurrentFrame(),
-                      minotaurX, 
-                      controller.getMinotaurY(), 
-                      0.5,    // Scale to 50% of original size
-                      true);  // Flip horizontally to face left
+            // Choose which sprite to render based on minotaur's current action
+            // Attack animation uses different sprite sheet than walking/idle
+            if (controller.getIsMinotaurAttacking()) {
+                // Draw minotaur using attack animation frames
+                drawSprite(controller.getMinotaurAttackSprite(),
+                           controller.getMinotaurAttackController().getCurrentFrame(),
+                           minotaurX,
+                           controller.getMinotaurY(),
+                           0.5,    // Scale to 50% of original size
+                           true);  // Flip horizontally to face left
+            } else if (controller.getIsMinotaurWalking()){
+                // Draw minotaur using walking/idle animation frames
+                drawSprite(controller.getMinotaurSprite(), 
+                        controller.getMinotaurController().getCurrentFrame(),
+                        minotaurX, 
+                        controller.getMinotaurY(), 
+                        0.5,    // Scale to 50% of original size
+                        true);  // Flip horizontally to face left
+            }
+            
+            else {
+                // Idle state - draw first frame of attack sprite as standing pose
+                // Uses frame 0 which shows minotaur in neutral stance with feet planted
+                drawSprite(controller.getMinotaurAttackSprite(),
+                        0,
+                        minotaurX,
+                        controller.getMinotaurY(),
+                        0.5,    // Scale to 50% of original size
+                        true);  // Flip horizontally to face left
+            }
         }
         
         // Always draw skeleton (player character is always visible)
@@ -83,7 +107,8 @@ public class GameWorld extends Canvas {
             
             /**
              * I had Claude help me with flipping the minotaur image so that 
-             * it faced the skeleton.
+             * it faced the skeleton. Claude also helped me with scaling the 
+             * images
              */
             if (flipHorizontal) {
                 // Save the current transformation state

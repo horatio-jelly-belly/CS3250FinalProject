@@ -3,6 +3,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * All comments in every file of this final project were created with AI.
+ * I uploaded my files and asked AI to generate comments for them.
+ * 
+ * I also used AI to help me understand how to separate the UI and business logic.
+ * I was uncertain as to which parts were supposed to go into the UI and which were not.
+ * I typed the code out and then feed what I had typed into AI and it guided me 
+ * through which parts go in which file and why.
+ * 
+ * All sprites came from craftpix.net
+ */
+
+/**
  * Entry point for the JavaFX application.
  * Launches the game and creates the main window.
  * Extends Application to integrate with JavaFX framework.

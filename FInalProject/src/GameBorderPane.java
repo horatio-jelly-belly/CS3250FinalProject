@@ -60,6 +60,7 @@ public class GameBorderPane extends BorderPane {
         HBox hitPointsHBox = new HBox();
         Label hitPointsLabel = new Label("Hitpoints: ");
         Label currentHitPoints = new Label(String.valueOf(gameController.getPlayer().getHitPoints()));
+        gameController.setPlayerHitPointsLabel(currentHitPoints);
         hitPointsHBox.getChildren().addAll(hitPointsLabel, currentHitPoints);
         
         // HBox to hold attack points labels horizontally

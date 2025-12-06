@@ -18,6 +18,13 @@ public class GameController {
 	 */
 	private Label enemyHitPointsLabel;
 	
+	/**
+	 * Reference to the UI label displaying player hit points.
+	 * Stored here so the controller can update the display when the player takes damage.
+	 * Mirrors the pattern used for enemyHitPointsLabel to maintain consistency.
+	 */
+	private Label playerHitPointsLabel;
+	
     /**
      * Sprite manager for skeleton character images.
      * Handles loading and accessing skeleton animation frames.
@@ -30,6 +37,11 @@ public class GameController {
      */
     private CharacterSprite minotaurSprite;
     
+    /**
+     * Sprite manager for minotaur attack animation images.
+     * Separate from minotaurSprite (walking) because attack uses different frames.
+     * Loaded from the images.minotaur_attacking package with 12 frames.
+     */
     private CharacterSprite minotaurAttackSprite;
     
     /**
@@ -44,6 +56,11 @@ public class GameController {
      */
     private AnimationController minotaurController;
     
+    /**
+     * Animation timing controller for minotaur attack sequence.
+     * Separate from minotaurController (walking) to independently track attack frames.
+     * Works in tandem with minotaurAttackSprite to animate the attack.
+     */
     private AnimationController minotaurAttackController;
     
     /**
@@ -122,6 +139,20 @@ public class GameController {
     private boolean isSkeletonAttacking = false;
     
     /**
+     * Flag indicating if minotaur is currently performing an attack animation.
+     * Used by the game loop to update attack animation frames.
+     * Also used by GameWorld to determine which sprite to render.
+     */
+    private boolean isMinotaurAttacking = false;
+    
+    /**
+     * Flag indicating whose turn it is in the turn-based combat system.
+     * True means the player can act; false means it's the enemy's turn.
+     * Controls the flow of combat by preventing actions during opponent's turn.
+     */
+    private boolean isPlayerTurn = true;
+    
+    /**
      * Constructor that establishes the controller-view relationship.
      * @param gameWorld The canvas where graphics will be rendered
      */
@@ -141,6 +172,16 @@ public class GameController {
      */
     public void setEnemyHitPointsLabel(Label label) {
         this.enemyHitPointsLabel = label;
+    }
+    
+    /**
+     * Sets the reference to the player HP label for UI updates.
+     * Called by GameBorderPane during initialization to establish
+     * the connection between game logic and UI display.
+     * @param label The Label component showing player hit points
+     */
+    public void setPlayerHitPointsLabel(Label label) {
+        this.playerHitPointsLabel = label;
     }
     
     /**
@@ -195,6 +236,20 @@ public class GameController {
     }
     
     /**
+     * Initiates minotaur attack animation sequence.
+     * Called automatically when the skeleton's attack completes and minotaur is alive.
+     * Unlike startSkeletonAttack(), this is triggered by game logic, not user input.
+     * Only starts if minotaur isn't already attacking and the player is still alive.
+     */
+    public void startMinotaurAttack() {
+        if (!isMinotaurAttacking && skeletonPlayer.isAlive()) {
+            isMinotaurAttacking = true;
+            minotaurAttackController.resetAnimation();
+            startGameLoop();
+        }
+    }
+    
+    /**
      * Initiates minotaur walking onto the scene.
      * Called during game initialization to start enemy approach.
      */
@@ -236,7 +291,12 @@ public class GameController {
                     	enemyHitPointsLabel.setText(String.valueOf(minotaurEnemy.getHitPoints())); // Change the current hit points label
                         isSkeletonAttacking = false;      // Clear attack flag
                         skeletonController.resetAnimation(); // Ready for next attack
+                        isPlayerTurn = false;
+                        canAttack.set(false);
                         
+                        if (minotaurEnemy.isAlive()) {
+                        	startMinotaurAttack();
+                        }
                     }
                 }
                 
@@ -251,13 +311,26 @@ public class GameController {
                     }
                 }
                 
+                if (isMinotaurAttacking && !isPlayerTurn && minotaurAttackController.update(now)) {
+                	needsRedraw = true;
+                	
+                	if (minotaurAttackController.isAnimationComplete()) {
+                		skeletonPlayer.takeDamage(minotaurEnemy.getAttackPoints());
+                		playerHitPointsLabel.setText(String.valueOf(skeletonPlayer.getHitPoints()));
+                		isMinotaurAttacking = false;
+                		minotaurAttackController.resetAnimation();
+                		isPlayerTurn = true;
+                		canAttack.set(true);
+                	}
+                }
+                
                 // Only redraw canvas if something changed (optimization)
                 if (needsRedraw) {
                     gameWorld.drawScene(GameController.this);
                 }
                 
                 // Stop game loop if nothing is animating (optimization)
-                if (!isSkeletonAttacking && !isMinotaurWalking) {
+                if (!isSkeletonAttacking && !isMinotaurAttacking && !isMinotaurWalking) {
                     gameLoop.stop();
                 }
             }
@@ -394,5 +467,41 @@ public class GameController {
      */
     public BooleanProperty canAttackProperty() {
         return canAttack;
+    }
+    
+    /**
+     * Gets minotaur attack sprite manager for rendering.
+     * Used by GameWorld when drawing the minotaur during its attack animation.
+     * @return The minotaur attack CharacterSprite instance
+     */
+    public CharacterSprite getMinotaurAttackSprite() {
+        return minotaurAttackSprite;
+    }
+    
+    /**
+     * Gets minotaur attack animation controller for current frame.
+     * Used by GameWorld to determine which attack frame to display.
+     * @return The minotaur attack AnimationController instance
+     */
+    public AnimationController getMinotaurAttackController() {
+        return minotaurAttackController;
+    }
+    
+    /**
+     * Checks if the minotaur is currently in its attack animation.
+     * Used by GameWorld to decide whether to render attack or idle sprite.
+     * @return true if minotaur is attacking, false otherwise
+     */
+    public boolean getIsMinotaurAttacking() {
+        return isMinotaurAttacking;
+    }
+    
+    /**
+     * Checks if the minotaur is currently walking toward the player.
+     * Used by GameWorld to determine which sprite to render.
+     * @return true if minotaur is walking, false otherwise
+     */
+    public boolean getIsMinotaurWalking() {
+        return isMinotaurWalking;
     }
 }
